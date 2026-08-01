@@ -63,6 +63,17 @@ class PujaAPIController extends AppBaseController
         return $this->sendResponse($pujas->toArray(), 'Pujas retrieved successfully');
     }
 
+    public function publicIndex(Request $request): JsonResponse
+    {
+        $pujas = Puja::query()
+            ->where('publish', 1)
+            ->orderBy('sort')
+            ->orderBy('id')
+            ->get();
+
+        return $this->sendResponse($pujas->toArray(), 'Published pujas retrieved successfully');
+    }
+
     /**
      * @OA\Post(
      *      path="/pujas",

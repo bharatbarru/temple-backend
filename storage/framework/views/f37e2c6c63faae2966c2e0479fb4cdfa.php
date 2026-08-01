@@ -19,7 +19,7 @@
     <div class="card-body">
         <div class="row">
             <h5 class="col-md-4 text-primary">Puja Request ID:</h5>
-            <h5 class="col-md-8 text-primary" style="font-weight:bold">{{ $pujaOrder->puja_request_id }}</h5>
+            <h5 class="col-md-8 text-primary" style="font-weight:bold"><?php echo e($pujaOrder->puja_request_id); ?></h5>
         </div>
 
         <div class="color-pallate">
@@ -38,14 +38,13 @@
             <div class="order-status">
                 <h3>Order Status</h3>
                 <ul>
-                    @foreach ($pujaOrder->orderStatuses as $status)
-                        <li class="{{ 
-                            $status->status == 'NEW REQUEST' ? 'new-request' : 
+                    <?php $__currentLoopData = $pujaOrder->orderStatuses; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $status): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <li class="<?php echo e($status->status == 'NEW REQUEST' ? 'new-request' : 
                             ($status->status == 'RESCHEDULE REQUEST' ? 'reschedule-request' : 
-                            ($status->status == 'CANCEL REQUEST' ? 'cancellation-request' : '')) 
-                        }}">{{ $status->status }}
+                            ($status->status == 'CANCEL REQUEST' ? 'cancellation-request' : ''))); ?>"><?php echo e($status->status); ?>
+
                         </li>
-                    @endforeach
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </ul>
             </div>
         </div>
@@ -65,24 +64,25 @@
     <div class="card-body">
         <div class="row">
             <p class="col-md-4">Name: </p>
-            <p class="col-md-8 " style="font-weight:bold"> {{ $pujaOrder->user->first_name . ' ' . $pujaOrder->user->last_name }}</p>
+            <p class="col-md-8 " style="font-weight:bold"> <?php echo e($pujaOrder->user->first_name . ' ' . $pujaOrder->user->last_name); ?></p>
 
             <p class="col-md-4">Address: </p>
             <p class="col-md-8 font-weight-bold">
-                {{ implode(', ', array_filter([
+                <?php echo e(implode(', ', array_filter([
                     $pujaOrder->user->address,
                     $pujaOrder->user->city,
                     $pujaOrder->user->state,
                     $pujaOrder->user->pincode,
                     $pujaOrder->user->country
-                ], fn($value) => !is_null($value) && $value !== '')) }}
+                ], fn($value) => !is_null($value) && $value !== ''))); ?>
+
             </p>
 
             <p class="col-md-4">Contact No</p>
-            <p class="col-md-8 font-weight-bold">{{ $pujaOrder->user->mobile }}</p>
+            <p class="col-md-8 font-weight-bold"><?php echo e($pujaOrder->user->mobile); ?></p>
 
             <p class="col-md-4">Email</p>
-            <p class="col-md-8 font-weight-bold">{{ $pujaOrder->user->email }}</p>
+            <p class="col-md-8 font-weight-bold"><?php echo e($pujaOrder->user->email); ?></p>
 
 
         </div>
@@ -90,9 +90,9 @@
     <!-- /.card-body -->
 </div>
 
-@php
+<?php
     $statuses = $pujaOrder->orderStatuses->pluck('status')->toArray();
-@endphp
+?>
 
 <div class="card callout callout-info puja-card">
     <div class="card-header ">
@@ -109,35 +109,35 @@
         <div class="row">
             <p class="col-md-4">
                 Date Of Puja:
-                @if(in_array(RESCHEDULE_REQUEST, $statuses))
+                <?php if(in_array(RESCHEDULE_REQUEST, $statuses)): ?>
                     <span class="badge badge-primary">Rescheduled</span>
-                @endif
+                <?php endif; ?>
             </p>
-            <p class="col-md-8 " style="font-weight:bold"> {{ formatDate($pujaOrder->date_of_puja) }}</p>
+            <p class="col-md-8 " style="font-weight:bold"> <?php echo e(formatDate($pujaOrder->date_of_puja)); ?></p>
 
             <p class="col-md-4">
                 Time Of Puja:
-                @if(in_array(RESCHEDULE_REQUEST, $statuses))
+                <?php if(in_array(RESCHEDULE_REQUEST, $statuses)): ?>
                     <span class="badge badge-primary">Rescheduled</span>
-                @endif
+                <?php endif; ?>
             </p>
-            <p class="col-md-8 " style="font-weight:bold"> {{ $pujaOrder->time_of_puja }}</p>
+            <p class="col-md-8 " style="font-weight:bold"> <?php echo e($pujaOrder->time_of_puja); ?></p>
 
 
             <p class="col-md-4">Alternate Date Of Puja1: </p>
-            <p class="col-md-8 " style="font-weight:bold"> {{ formatDate($pujaOrder->alternate_date_of_puja1) }}</p>
+            <p class="col-md-8 " style="font-weight:bold"> <?php echo e(formatDate($pujaOrder->alternate_date_of_puja1)); ?></p>
 
             <p class="col-md-4">Alternate Time Of Puja1: </p>
-            <p class="col-md-8 " style="font-weight:bold"> {{ $pujaOrder->alternate_time_of_puja2 }}</p>
+            <p class="col-md-8 " style="font-weight:bold"> <?php echo e($pujaOrder->alternate_time_of_puja2); ?></p>
 
             <p class="col-md-4">Comment/Special Instruction: </p>
-            <p class="col-md-8 " style="font-weight:bold"> {{ $pujaOrder->comments }}</p>
+            <p class="col-md-8 " style="font-weight:bold"> <?php echo e($pujaOrder->comments); ?></p>
         </div>
     </div>
     <!-- /.card-body -->
 </div>
 
-@if(in_array(RESCHEDULE_REQUEST, $statuses))
+<?php if(in_array(RESCHEDULE_REQUEST, $statuses)): ?>
     <div class="card callout callout-warning puja-card">
         <div class="card-header ">
             <div class="row mb-2">
@@ -152,17 +152,17 @@
         <div class="card-body">
             <div class="row">
                 <p class="col-md-4">Changed By: </p>
-                <p class="col-md-8 " style="font-weight:bold"> {{ $pujaOrder->changed_by }}</p>
+                <p class="col-md-8 " style="font-weight:bold"> <?php echo e($pujaOrder->changed_by); ?></p>
 
                 <p class="col-md-4">Changed Comments: </p>
-                <p class="col-md-8 " style="font-weight:bold"> {{ $pujaOrder->changed_comments }}</p>
+                <p class="col-md-8 " style="font-weight:bold"> <?php echo e($pujaOrder->changed_comments); ?></p>
             </div>
         </div>
         <!-- /.card-body -->
     </div>
-@endif
+<?php endif; ?>
 
-@if(in_array(CANCEL_REQUEST, $statuses))
+<?php if(in_array(CANCEL_REQUEST, $statuses)): ?>
     <div class="card callout callout-danger puja-card">
         <div class="card-header ">
             <div class="row mb-2">
@@ -177,15 +177,15 @@
         <div class="card-body">
             <div class="row">
                 <p class="col-md-4">Cancelled By: </p>
-                <p class="col-md-8 " style="font-weight:bold"> {{ $pujaOrder->cancelled_by }}</p>
+                <p class="col-md-8 " style="font-weight:bold"> <?php echo e($pujaOrder->cancelled_by); ?></p>
 
                 <p class="col-md-4">Cancelled Comments: </p>
-                <p class="col-md-8 " style="font-weight:bold"> {{ $pujaOrder->cancelled_comments }}</p>
+                <p class="col-md-8 " style="font-weight:bold"> <?php echo e($pujaOrder->cancelled_comments); ?></p>
             </div>
         </div>
         <!-- /.card-body -->
     </div>
-@endif
+<?php endif; ?>
 
 <div class="card callout callout-info puja-card">
     <div class="card-header ">
@@ -210,17 +210,17 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($pujaOrder->pujaOrderLists as $pujaOrderList)
+                        <?php $__currentLoopData = $pujaOrder->pujaOrderLists; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $pujaOrderList): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <tr>
-                                <td>{{ $pujaOrderList->puja->name }}</td>
-                                <td>{{ formatAmount($pujaOrderList->puja_cost) }}</td>
+                                <td><?php echo e($pujaOrderList->puja->name); ?></td>
+                                <td><?php echo e(formatAmount($pujaOrderList->puja_cost)); ?></td>
                             </tr>
-                        @endforeach
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </tbody>
                     <tfoot>
                         <tr>
                             <td><strong>Total Amount:</strong></td>
-                            <td><strong>{{ formatAmount($pujaOrder->total_amount) }}</strong></td>
+                            <td><strong><?php echo e(formatAmount($pujaOrder->total_amount)); ?></strong></td>
                         </tr>
                     </tfoot>
                 </table>
@@ -230,7 +230,7 @@
     <!-- /.card-body -->
 </div>
 
-@if($pujaOrder->paymentTransactions->isNotEmpty())
+<?php if($pujaOrder->paymentTransactions->isNotEmpty()): ?>
     <div class="card callout callout-success puja-card">
         <div class="card-header ">
             <div class="row mb-2">
@@ -242,46 +242,47 @@
             </div>
         </div>
         <div class="card-body">
-            @foreach($pujaOrder->paymentTransactions as $transaction)
+            <?php $__currentLoopData = $pujaOrder->paymentTransactions; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $transaction): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                 <div class="row">
                     <p class="col-md-4">Transaction ID:</p>
-                    <p class="col-md-8 font-weight-bold">{{ $transaction->id }}</p>
+                    <p class="col-md-8 font-weight-bold"><?php echo e($transaction->id); ?></p>
 
                     <p class="col-md-4">PayPal Order ID:</p>
-                    <p class="col-md-8 font-weight-bold">{{ $transaction->paypal_order_id ?? 'N/A' }}</p>
+                    <p class="col-md-8 font-weight-bold"><?php echo e($transaction->paypal_order_id ?? 'N/A'); ?></p>
 
                     <p class="col-md-4">PayPal Capture ID:</p>
-                    <p class="col-md-8 font-weight-bold">{{ $transaction->paypal_capture_id ?? 'N/A' }}</p>
+                    <p class="col-md-8 font-weight-bold"><?php echo e($transaction->paypal_capture_id ?? 'N/A'); ?></p>
 
                     <p class="col-md-4">Status:</p>
-                    <p class="col-md-8 font-weight-bold">{{ $transaction->paypal_status ?? 'N/A' }}</p>
+                    <p class="col-md-8 font-weight-bold"><?php echo e($transaction->paypal_status ?? 'N/A'); ?></p>
 
                     <p class="col-md-4">Paid:</p>
-                    <p class="col-md-8 font-weight-bold">{{ $transaction->paypal_paid ? 'Yes' : 'No' }}</p>
+                    <p class="col-md-8 font-weight-bold"><?php echo e($transaction->paypal_paid ? 'Yes' : 'No'); ?></p>
 
                     <p class="col-md-4">Amount:</p>
-                    <p class="col-md-8 font-weight-bold">{{ formatAmount($transaction->paypal_amount) }}</p>
+                    <p class="col-md-8 font-weight-bold"><?php echo e(formatAmount($transaction->paypal_amount)); ?></p>
 
                     <p class="col-md-4">Currency:</p>
-                    <p class="col-md-8 font-weight-bold">{{ $transaction->paypal_currency ?? 'N/A' }}</p>
+                    <p class="col-md-8 font-weight-bold"><?php echo e($transaction->paypal_currency ?? 'N/A'); ?></p>
 
                     <p class="col-md-4">Payer Email:</p>
-                    <p class="col-md-8 font-weight-bold">{{ $transaction->paypal_payer_email ?? 'N/A' }}</p>
+                    <p class="col-md-8 font-weight-bold"><?php echo e($transaction->paypal_payer_email ?? 'N/A'); ?></p>
 
                     <p class="col-md-4">Payer ID:</p>
-                    <p class="col-md-8 font-weight-bold">{{ $transaction->paypal_payer_id ?? 'N/A' }}</p>
+                    <p class="col-md-8 font-weight-bold"><?php echo e($transaction->paypal_payer_id ?? 'N/A'); ?></p>
 
                     <p class="col-md-4">Created At:</p>
-                    <p class="col-md-8 font-weight-bold">{{ $transaction->paypal_create_time ?? $transaction->created_at }}</p>
+                    <p class="col-md-8 font-weight-bold"><?php echo e($transaction->paypal_create_time ?? $transaction->created_at); ?></p>
 
                     <p class="col-md-4">Updated At:</p>
-                    <p class="col-md-8 font-weight-bold">{{ $transaction->paypal_update_time ?? $transaction->updated_at }}</p>
+                    <p class="col-md-8 font-weight-bold"><?php echo e($transaction->paypal_update_time ?? $transaction->updated_at); ?></p>
                 </div>
 
-                @if(!$loop->last)
+                <?php if(!$loop->last): ?>
                     <hr>
-                @endif
-            @endforeach
+                <?php endif; ?>
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
         </div>
     </div>
-@endif
+<?php endif; ?>
+<?php /**PATH C:\Users\DELL\Desktop\laravel-backup-20260801\laravel\resources\views/puja_orders/show_fields.blade.php ENDPATH**/ ?>

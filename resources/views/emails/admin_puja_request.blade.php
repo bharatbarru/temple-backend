@@ -201,6 +201,45 @@
                                     </td>
                                 </tr>
                             </table>
+
+                            @php $transactions = $pujaOrder->paymentTransactions; @endphp
+                            @if($transactions && $transactions->isNotEmpty())
+                                <p style="font-family: Arial, sans-serif; font-size: 16px; line-height: 18px; margin: 20px 0 10px 0; color: #000000; font-weight: bold;">
+                                    PAYMENT TRANSACTION DETAILS
+                                </p>
+                                <table cellpadding="0" cellspacing="0" border="1" borderColor="#eeeeee" width="100%" style="margin-top: 10px;">
+                                    @foreach($transactions as $transaction)
+                                        <tr>
+                                            <td style="font-family: Arial, sans-serif; font-size: 13px; line-height: 17px; color: #333333; padding: 5px; border-bottom: 1px solid #eeeeee;">Transaction ID</td>
+                                            <td style="font-family: Arial, sans-serif; font-size: 13px; line-height: 17px; color: #333333; padding: 5px; border-bottom: 1px solid #eeeeee;">{{ $transaction->id }}</td>
+                                        </tr>
+                                        <tr bgColor="#f1f1f1">
+                                            <td style="font-family: Arial, sans-serif; font-size: 13px; line-height: 17px; color: #333333; padding: 5px; border-bottom: 1px solid #eeeeee;">PayPal Order ID</td>
+                                            <td style="font-family: Arial, sans-serif; font-size: 13px; line-height: 17px; color: #333333; padding: 5px; border-bottom: 1px solid #eeeeee;">{{ $transaction->paypal_order_id ?? 'N/A' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="font-family: Arial, sans-serif; font-size: 13px; line-height: 17px; color: #333333; padding: 5px; border-bottom: 1px solid #eeeeee;">PayPal Capture ID</td>
+                                            <td style="font-family: Arial, sans-serif; font-size: 13px; line-height: 17px; color: #333333; padding: 5px; border-bottom: 1px solid #eeeeee;">{{ $transaction->paypal_capture_id ?? 'N/A' }}</td>
+                                        </tr>
+                                        <tr bgColor="#f1f1f1">
+                                            <td style="font-family: Arial, sans-serif; font-size: 13px; line-height: 17px; color: #333333; padding: 5px; border-bottom: 1px solid #eeeeee;">Status</td>
+                                            <td style="font-family: Arial, sans-serif; font-size: 13px; line-height: 17px; color: #333333; padding: 5px; border-bottom: 1px solid #eeeeee;">{{ $transaction->paypal_status ?? 'N/A' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="font-family: Arial, sans-serif; font-size: 13px; line-height: 17px; color: #333333; padding: 5px; border-bottom: 1px solid #eeeeee;">Amount</td>
+                                            <td style="font-family: Arial, sans-serif; font-size: 13px; line-height: 17px; color: #333333; padding: 5px; border-bottom: 1px solid #eeeeee;">${{ number_format((float) ($transaction->paypal_amount ?? 0), 2) }}</td>
+                                        </tr>
+                                        <tr bgColor="#f1f1f1">
+                                            <td style="font-family: Arial, sans-serif; font-size: 13px; line-height: 17px; color: #333333; padding: 5px; border-bottom: 1px solid #eeeeee;">Currency</td>
+                                            <td style="font-family: Arial, sans-serif; font-size: 13px; line-height: 17px; color: #333333; padding: 5px; border-bottom: 1px solid #eeeeee;">{{ $transaction->paypal_currency ?? 'N/A' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="font-family: Arial, sans-serif; font-size: 13px; line-height: 17px; color: #333333; padding: 5px; border-bottom: 1px solid #eeeeee;">Payer Email</td>
+                                            <td style="font-family: Arial, sans-serif; font-size: 13px; line-height: 17px; color: #333333; padding: 5px; border-bottom: 1px solid #eeeeee;">{{ $transaction->paypal_payer_email ?? 'N/A' }}</td>
+                                        </tr>
+                                    @endforeach
+                                </table>
+                            @endif
                             <p
                             style="font-family: Arial, sans-serif; font-size: 14px; color: #666666; line-height: 1.5; margin-top: 20px; text-align: center;">
                             If you have any questions, feel free to reply to this <a href="mailto:{!! applicationSettings('secondary-email') !!}"

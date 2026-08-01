@@ -20,13 +20,12 @@
                     </tr>
                     <tr>
                         <td style="text-align: center; padding: 20px;">
-                            <h1 style="font-family: Arial, sans-serif; font-size: 24px; color: #980406;">Your request For 
-                                Puja Request</h1>
+                            <h1 style="font-family: Arial, sans-serif; font-size: 24px; color: #980406;">New Puja Request Recieved</h1>
                             <p
                                 style="font-family: Arial, sans-serif; font-size: 13px; line-height: 20px; color: #000000;">
-                                Dear <b> {{ $pujaOrder->user->first_name . ' ' . $pujaOrder->user->last_name }},
+                                Dear <b> Admin,
                                 </b> <br/>
-                                Your request for the Puja Request has been successfully submitted. 
+                                You Have Recieved a New Puja Request 
                                 <br/>
                                 Please find the details of the request below.
                                </p>
@@ -47,7 +46,7 @@
                                         <p
                                             style="font-family: Arial, sans-serif; font-size: 14px; color: #666666; line-height: 16px;">
                                             Request ID: <span
-                                                style="color:#980406; font-weight: bold;">{{ $pujaOrder->puja_request_id }}</span>
+                                                style="color:#980406; font-weight: bold;"><?php echo e($pujaOrder->puja_request_id); ?></span>
                                         </p>
                                     </td>
                                     <td align="right">
@@ -55,12 +54,12 @@
 
                                         <p
                                             style="font-family: Arial, sans-serif; font-size: 14px; color: #666666; line-height: 16px; margin-bottom: 0; padding-bottom: 0;">
-                                            Request Status: <span style="color:#980406; font-weight: bold;">{{ $pujaOrder->getLatestStatus() }}</span>
+                                            Request Status: <span style="color:#980406; font-weight: bold;"><?php echo e($pujaOrder->getLatestStatus()); ?></span>
                                         </p>
 
                                         <p
                                             style="font-family: Arial, sans-serif; font-size: 14px; color: #666666; line-height: 16px; margin-bottom: 0; padding-bottom: 0;">
-                                            Total Amount: <span style="color:#980406; font-weight: bold;">$ {{ $pujaOrder->total_amount }}</span>
+                                            Total Amount: <span style="color:#980406; font-weight: bold;">$ <?php echo e($pujaOrder->total_amount); ?></span>
                                         </p>
 
                                     </td>
@@ -81,7 +80,7 @@
                                         Name:</td>
                                     <td
                                         style="font-family: Arial, sans-serif; font-size: 13px; line-height: 17px; color: #333333; padding: 5px; border-bottom: 1px solid #eeeeee;">
-                                        {{ $pujaOrder->user->first_name . ' ' . $pujaOrder->user->last_name }}</td>
+                                        <?php echo e($pujaOrder->user->first_name . ' ' . $pujaOrder->user->last_name); ?></td>
                                 </tr>
                                 <tr bgColor="#f1f1f1">
                                     <td
@@ -89,7 +88,7 @@
                                         Address:</td>
                                     <td
                                         style="font-family: Arial, sans-serif; font-size: 13px; line-height: 17px; color: #333333; padding: 5px; border-bottom: 1px solid #eeeeee;">
-                                        {{ $pujaOrder->user->address }},{{ $pujaOrder->user->city }},{{ $pujaOrder->user->state }},{{ $pujaOrder->user->zip_code }}</td>
+                                        <?php echo e($pujaOrder->user->address); ?>,<?php echo e($pujaOrder->user->city); ?>,<?php echo e($pujaOrder->user->state); ?>,<?php echo e($pujaOrder->user->zip_code); ?></td>
                                 </tr>
                                 <tr>
                                     <td
@@ -97,8 +96,8 @@
                                         Contact No:</td>
                                     <td
                                         style="font-family: Arial, sans-serif; font-size: 13px; line-height: 17px; color: #333333; padding: 5px; border-bottom: 1px solid #eeeeee;">
-                                        <a href="tel:{{ $pujaOrder->user->mobile }}"
-                                            style="text-decoration: none; color: #980406; font-weight:bold;">{{ $pujaOrder->user->mobile }}</a>
+                                        <a href="tel:<?php echo e($pujaOrder->user->mobile); ?>"
+                                            style="text-decoration: none; color: #980406; font-weight:bold;"><?php echo e($pujaOrder->user->mobile); ?></a>
                                     </td>
                                 </tr>
                                 <tr bgColor="#f1f1f1">
@@ -108,11 +107,12 @@
                                     </td>
                                     <td
                                         style="font-family: Arial, sans-serif; font-size: 13px; line-height: 17px; color: #333333; padding: 5px; border-bottom: 1px solid #eeeeee;">
-                                        <a href="mailto:{{ $pujaOrder->user->email }}"
+                                        <a href="mailto:<?php echo e($pujaOrder->user->email); ?>"
                                             style="text-decoration: none; color: #980406; font-weight:bold;">
-                                            {{ $pujaOrder->user->email }}</a>
+                                            <?php echo e($pujaOrder->user->email); ?></a>
                                     </td>
                                 </tr>
+                               
                             </table>
 
 
@@ -131,7 +131,8 @@
                                         Date of Puja:</td>
                                     <td
                                         style="font-family: Arial, sans-serif; font-size: 13px; line-height: 17px; color: #333333; padding: 5px; border-bottom: 1px solid #eeeeee;">
-                                        {{formatDate($pujaOrder->date_of_puja) }}
+                                        <?php echo e(formatDate($pujaOrder->date_of_puja)); ?>
+
                                       
                                     </td>
                                 </tr>
@@ -141,30 +142,32 @@
                                         Puja Timings:</td>
                                     <td
                                         style="font-family: Arial, sans-serif; font-size: 13px; line-height: 17px; color: #333333; padding: 5px; border-bottom: 1px solid #eeeeee;">
-                                        {{ $pujaOrder->time_of_puja }}
+                                        <?php echo e($pujaOrder->time_of_puja); ?>
+
                                        
                                     </td>
                                 </tr>
                                 <tr>
                                     <td
                                         style="font-family: Arial, sans-serif; font-size: 13px; line-height: 17px; color: #333333; padding: 5px; border-bottom: 1px solid #eeeeee;">
-                                       Alternate Date:</td>
+                                        Alternative Date one:</td>
                                     <td
                                         style="font-family: Arial, sans-serif; font-size: 13px; line-height: 17px; color: #333333; padding: 5px; border-bottom: 1px solid #eeeeee;">
-                                        {{formatDate($pujaOrder->alternate_date_of_puja1) }}
-                                      
+                                        <?php echo e(formatDate($pujaOrder->alternate_date_of_puja1)); ?>
+
                                     </td>
                                 </tr>
                                 <tr>
                                     <td
                                         style="font-family: Arial, sans-serif; font-size: 13px; line-height: 17px; color: #333333; padding: 5px; border-bottom: 1px solid #eeeeee;">
-                                        Alternate Time:</td>
+                                        Alternative Time 1:</td>
                                     <td
                                         style="font-family: Arial, sans-serif; font-size: 13px; line-height: 17px; color: #333333; padding: 5px; border-bottom: 1px solid #eeeeee;">
-                                        {{ $pujaOrder->alternate_time_of_puja2 }}
-                                       
+                                        <?php echo e($pujaOrder->alternate_time_of_puja2); ?>
+
                                     </td>
                                 </tr>
+                               
 
 
                             </table>
@@ -172,90 +175,82 @@
                             <table cellpadding="0" cellspacing="0" border="1" borderColor="#eeeeee" width="100%" style="margin-top: 20px;">
                                 <tr>
                                     <th style="font-family: Arial, sans-serif; font-size: 13px; line-height: 17px; color: #333333; padding: 5px; border-bottom: 1px solid #eeeeee;">
-                                        Puja / Service - {{$pujaOrder->puja_location == 'home' ? 'Home' : 'Temple'}}
+                                        Puja / Service - <?php echo e($pujaOrder->puja_location == 'home' ? 'Home' : 'Temple'); ?>
+
                                     </th>
                                     <th style="font-family: Arial, sans-serif; font-size: 13px; line-height: 17px; color: #333333; padding: 5px; border-bottom: 1px solid #eeeeee;">
                                         Charge Amount
                                     </th>
                                 </tr>
                             
-                                @php $total = 0; @endphp
+                                <?php $total = 0; ?>
                             
-                                @foreach($halls as $hall)
-                                    <tr @if($loop->even) bgColor="#f1f1f1" @endif>
+                                <?php $__currentLoopData = $halls; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $hall): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <tr <?php if($loop->even): ?> bgColor="#f1f1f1" <?php endif; ?>>
                                         <td style="font-family: Arial, sans-serif; font-size: 13px; line-height: 17px; color: #333333; padding: 5px; border-bottom: 1px solid #eeeeee;">
-                                            {{ $hall->name }}
+                                            <?php echo e($hall->name); ?>
+
                                         </td>
                                         <td align="right" style="font-family: Arial, sans-serif; font-size: 13px; line-height: 17px; color: #333333; padding: 5px; border-bottom: 1px solid #eeeeee;">
-                                            <span style="text-decoration: none; font-weight:bold;">$ {{ number_format($hall->puja_cost, 2) }}</span>
+                                            <span style="text-decoration: none; font-weight:bold;">$ <?php echo e(number_format($hall->puja_cost, 2)); ?></span>
                                         </td>
                                     </tr>
-                                    @php $total += $hall->puja_cost; @endphp
-                                @endforeach
+                                    <?php $total += $hall->puja_cost; ?>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             
                                 <tr bgColor="#b40b0d">
                                     <td align="right" style="font-family: Arial, sans-serif; font-size: 15px; line-height: 17px; color: #ffffff; padding: 5px; border-bottom: 1px solid #eeeeee; font-weight: bold;">
                                         Total
                                     </td>
                                     <td align="right" style="font-family: Arial, sans-serif; font-size: 15px; line-height: 17px; color: #ffffff; padding: 5px; border-bottom: 1px solid #eeeeee;">
-                                        <span style="color:#ffffff; text-decoration: none; font-weight:bold;">$ {{ number_format($total, 2) }}</span>
+                                        <span style="color:#ffffff; text-decoration: none; font-weight:bold;">$ <?php echo e(number_format($total, 2)); ?></span>
                                     </td>
                                 </tr>
                             </table>
-                            
 
-
-
-
-
-
-
-
-
-                            @php $transactions = $pujaOrder->paymentTransactions; @endphp
-                            @if($transactions && $transactions->isNotEmpty())
+                            <?php $transactions = $pujaOrder->paymentTransactions; ?>
+                            <?php if($transactions && $transactions->isNotEmpty()): ?>
                                 <p style="font-family: Arial, sans-serif; font-size: 16px; line-height: 18px; margin: 20px 0 10px 0; color: #000000; font-weight: bold;">
                                     PAYMENT TRANSACTION DETAILS
                                 </p>
                                 <table cellpadding="0" cellspacing="0" border="1" borderColor="#eeeeee" width="100%" style="margin-top: 10px;">
-                                    @foreach($transactions as $transaction)
+                                    <?php $__currentLoopData = $transactions; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $transaction): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                         <tr>
                                             <td style="font-family: Arial, sans-serif; font-size: 13px; line-height: 17px; color: #333333; padding: 5px; border-bottom: 1px solid #eeeeee;">Transaction ID</td>
-                                            <td style="font-family: Arial, sans-serif; font-size: 13px; line-height: 17px; color: #333333; padding: 5px; border-bottom: 1px solid #eeeeee;">{{ $transaction->id }}</td>
+                                            <td style="font-family: Arial, sans-serif; font-size: 13px; line-height: 17px; color: #333333; padding: 5px; border-bottom: 1px solid #eeeeee;"><?php echo e($transaction->id); ?></td>
                                         </tr>
                                         <tr bgColor="#f1f1f1">
                                             <td style="font-family: Arial, sans-serif; font-size: 13px; line-height: 17px; color: #333333; padding: 5px; border-bottom: 1px solid #eeeeee;">PayPal Order ID</td>
-                                            <td style="font-family: Arial, sans-serif; font-size: 13px; line-height: 17px; color: #333333; padding: 5px; border-bottom: 1px solid #eeeeee;">{{ $transaction->paypal_order_id ?? 'N/A' }}</td>
+                                            <td style="font-family: Arial, sans-serif; font-size: 13px; line-height: 17px; color: #333333; padding: 5px; border-bottom: 1px solid #eeeeee;"><?php echo e($transaction->paypal_order_id ?? 'N/A'); ?></td>
                                         </tr>
                                         <tr>
                                             <td style="font-family: Arial, sans-serif; font-size: 13px; line-height: 17px; color: #333333; padding: 5px; border-bottom: 1px solid #eeeeee;">PayPal Capture ID</td>
-                                            <td style="font-family: Arial, sans-serif; font-size: 13px; line-height: 17px; color: #333333; padding: 5px; border-bottom: 1px solid #eeeeee;">{{ $transaction->paypal_capture_id ?? 'N/A' }}</td>
+                                            <td style="font-family: Arial, sans-serif; font-size: 13px; line-height: 17px; color: #333333; padding: 5px; border-bottom: 1px solid #eeeeee;"><?php echo e($transaction->paypal_capture_id ?? 'N/A'); ?></td>
                                         </tr>
                                         <tr bgColor="#f1f1f1">
                                             <td style="font-family: Arial, sans-serif; font-size: 13px; line-height: 17px; color: #333333; padding: 5px; border-bottom: 1px solid #eeeeee;">Status</td>
-                                            <td style="font-family: Arial, sans-serif; font-size: 13px; line-height: 17px; color: #333333; padding: 5px; border-bottom: 1px solid #eeeeee;">{{ $transaction->paypal_status ?? 'N/A' }}</td>
+                                            <td style="font-family: Arial, sans-serif; font-size: 13px; line-height: 17px; color: #333333; padding: 5px; border-bottom: 1px solid #eeeeee;"><?php echo e($transaction->paypal_status ?? 'N/A'); ?></td>
                                         </tr>
                                         <tr>
                                             <td style="font-family: Arial, sans-serif; font-size: 13px; line-height: 17px; color: #333333; padding: 5px; border-bottom: 1px solid #eeeeee;">Amount</td>
-                                            <td style="font-family: Arial, sans-serif; font-size: 13px; line-height: 17px; color: #333333; padding: 5px; border-bottom: 1px solid #eeeeee;">${{ number_format((float) ($transaction->paypal_amount ?? 0), 2) }}</td>
+                                            <td style="font-family: Arial, sans-serif; font-size: 13px; line-height: 17px; color: #333333; padding: 5px; border-bottom: 1px solid #eeeeee;">$<?php echo e(number_format((float) ($transaction->paypal_amount ?? 0), 2)); ?></td>
                                         </tr>
                                         <tr bgColor="#f1f1f1">
                                             <td style="font-family: Arial, sans-serif; font-size: 13px; line-height: 17px; color: #333333; padding: 5px; border-bottom: 1px solid #eeeeee;">Currency</td>
-                                            <td style="font-family: Arial, sans-serif; font-size: 13px; line-height: 17px; color: #333333; padding: 5px; border-bottom: 1px solid #eeeeee;">{{ $transaction->paypal_currency ?? 'N/A' }}</td>
+                                            <td style="font-family: Arial, sans-serif; font-size: 13px; line-height: 17px; color: #333333; padding: 5px; border-bottom: 1px solid #eeeeee;"><?php echo e($transaction->paypal_currency ?? 'N/A'); ?></td>
                                         </tr>
                                         <tr>
                                             <td style="font-family: Arial, sans-serif; font-size: 13px; line-height: 17px; color: #333333; padding: 5px; border-bottom: 1px solid #eeeeee;">Payer Email</td>
-                                            <td style="font-family: Arial, sans-serif; font-size: 13px; line-height: 17px; color: #333333; padding: 5px; border-bottom: 1px solid #eeeeee;">{{ $transaction->paypal_payer_email ?? 'N/A' }}</td>
+                                            <td style="font-family: Arial, sans-serif; font-size: 13px; line-height: 17px; color: #333333; padding: 5px; border-bottom: 1px solid #eeeeee;"><?php echo e($transaction->paypal_payer_email ?? 'N/A'); ?></td>
                                         </tr>
-                                    @endforeach
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </table>
-                            @endif
-
+                            <?php endif; ?>
                             <p
                             style="font-family: Arial, sans-serif; font-size: 14px; color: #666666; line-height: 1.5; margin-top: 20px; text-align: center;">
-                            If you have any questions, feel free to reply to this <a href="mailto:{!! applicationSettings('secondary-email') !!}"
+                            If you have any questions, feel free to reply to this <a href="mailto:<?php echo applicationSettings('secondary-email'); ?>"
                             style="text-decoration: none; color: #980406; font-weight:bold;">
-                            {!! applicationSettings('secondary-email') !!}</a>, and our team will get back
+                            <?php echo applicationSettings('secondary-email'); ?></a>, and our team will get back
                             to you as soon as possible. 
                         </p>
                         </td>
@@ -274,4 +269,4 @@
     </table>
 </body>
 
-</html>
+</html><?php /**PATH C:\Users\DELL\Desktop\laravel-backup-20260801\laravel\resources\views/emails/admin_puja_request.blade.php ENDPATH**/ ?>

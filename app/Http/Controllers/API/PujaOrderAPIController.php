@@ -20,6 +20,7 @@ use App\Mail\UserCancelPujaMail;
 use App\Mail\UserPujaOrderMail;
 use App\Models\FrontendUser;
 use App\Models\OrderStatus;
+use App\Models\PaymentTransaction;
 use App\Models\PujaOrderList;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -115,38 +116,138 @@ class PujaOrderAPIController extends AppBaseController
         $input = $request->all();
         $cartItems = $input['cart'] ?? [];
 
+        $data = $this->savePujaOrder($input, $cartItems, true, false);
+
+        return $this->sendResponse($data, 'Puja Order saved successfully');
+    }
+
+    public function storePublic(CreatePujaOrderAPIRequest $request): JsonResponse
+    {
+        $input = $request->all();
+        $cartItems = $input['cart'] ?? [];
+
+        $data = $this->savePujaOrder($input, $cartItems, true, true);
+
+        return $this->sendResponse($data, 'Puja Order saved successfully');
+    }
+
+    public function paypalSuccess(Request $request): JsonResponse
+    {
+        $request->validate([
+            'puja_request_id' => 'required|string|exists:puja_orders,puja_request_id',
+            'email' => 'required|email',
+            'paypal_order_id' => 'nullable|string',
+            'paypal_capture_id' => 'nullable|string',
+            'paypal_status' => 'nullable|string',
+            'paypal_paid' => 'nullable|boolean',
+            'paypal_amount' => 'nullable|numeric',
+            'paypal_currency' => 'nullable|string',
+            'paypal_payer_email' => 'nullable|email',
+            'paypal_payer_id' => 'nullable|string',
+            'paypal_create_time' => 'nullable|string',
+            'paypal_update_time' => 'nullable|string',
+        ]);
+
+        $pujaOrder = PujaOrder::where('puja_request_id', $request->puja_request_id)->first();
+
+        if (!$pujaOrder) {
+            return $this->sendError('Puja order not found', 404);
+        }
+
+        $userEmail = $pujaOrder->user?->email;
+        if ($userEmail && strtolower($userEmail) !== strtolower($request->email)) {
+            return $this->sendError('Email does not match the registered user', 422);
+        }
+
+        $paymentStatus = ($request->boolean('paypal_paid', false) || strtoupper((string) $request->input('paypal_status', '')) === 'COMPLETED')
+            ? 'completed'
+            : 'pending';
+
+        $pujaOrder->update([
+            'payment_status' => $paymentStatus,
+        ]);
+
+        $paymentTransaction = PaymentTransaction::create([
+            'frontend_user_id' => $pujaOrder->user_id,
+            'puja_order_id' => $pujaOrder->id,
+            'puja_request_id' => $pujaOrder->puja_request_id,
+            'paypal_order_id' => $request->input('paypal_order_id'),
+            'paypal_capture_id' => $request->input('paypal_capture_id'),
+            'paypal_status' => $request->input('paypal_status'),
+            'paypal_paid' => $request->boolean('paypal_paid', false),
+            'paypal_amount' => $request->input('paypal_amount'),
+            'paypal_currency' => $request->input('paypal_currency'),
+            'paypal_payer_email' => $request->input('paypal_payer_email', $request->email),
+            'paypal_payer_id' => $request->input('paypal_payer_id'),
+            'paypal_create_time' => $request->input('paypal_create_time'),
+            'paypal_update_time' => $request->input('paypal_update_time'),
+            'paypal_raw' => $request->input('paypal_raw', []),
+        ]);
+
+        $halls = PujaOrderList::where('puja_order_id', $pujaOrder->id)
+            ->join('pujas', 'puja_order_lists.puja_id', '=', 'pujas.id')
+            ->select('pujas.id', 'pujas.name', 'puja_order_lists.puja_cost')
+            ->get();
+
+        $adminEmail = applicationSettings('puja-request-email');
+        if ($adminEmail) {
+            Mail::to($adminEmail)->send(new AdminPujaOrderMail($pujaOrder->load('paymentTransactions'), $halls));
+        }
+
+        if ($userEmail && app()->environment('production')) {
+            Mail::to($userEmail)->send(new UserPujaOrderMail($pujaOrder->load('paymentTransactions'), $halls));
+        }
+
+        return $this->sendResponse([
+            'puja_request_id' => $pujaOrder->puja_request_id,
+            'email' => $userEmail,
+            'payment_status' => $paymentStatus,
+            'transaction_id' => $paymentTransaction->id,
+            'paypal_order_id' => $paymentTransaction->paypal_order_id,
+            'paypal_capture_id' => $paymentTransaction->paypal_capture_id,
+            'paypal_status' => $paymentTransaction->paypal_status,
+            'paypal_paid' => $paymentTransaction->paypal_paid,
+            'paypal_amount' => $paymentTransaction->paypal_amount,
+            'paypal_currency' => $paymentTransaction->paypal_currency,
+            'paypal_payer_email' => $paymentTransaction->paypal_payer_email,
+            'paypal_payer_id' => $paymentTransaction->paypal_payer_id,
+        ], 'Payment completed successfully');
+    }
+
+    private function savePujaOrder(array $input, array $cartItems, bool $sendEmails = true, bool $publicRoute = false): array
+    {
         DB::beginTransaction();
 
         try {
-            // Check if user already exists
-
             $randomPassword = Str::random(8); // Generate a random 8-character password
 
-      
-                // Create a new user
-                $user = FrontendUser::create([
-                    'first_name' => $input['first_name'],
-                    'last_name' => $input['last_name'],
-                    'email' => $input['email'],
-                    'mobile' => $input['mobile'],
-                    'address' => $input['address'],
-                    'country' => $input['country'],
-                    'state' => $input['state'],
-                    'city' => $input['city'],
-                    'pincode' => $input['pincode'],
-                    'password' => bcrypt($randomPassword), // Store the random password (hashed)
-                ]);
+            $user = FrontendUser::create([
+                'first_name' => $input['first_name'],
+                'last_name' => $input['last_name'],
+                'email' => $input['email'],
+                'mobile' => $input['mobile'],
+                'address' => $input['address'],
+                'country' => $input['country'],
+                'state' => $input['state'],
+                'city' => $input['city'],
+                'pincode' => $input['pincode'],
+                'password' => bcrypt($randomPassword),
+            ]);
 
-            // Add user_id to request data
             $input['user_id'] = $user->id;
             $input['puja_location'] = $input['location'];
 
-            // Create Puja Order
             $pujaOrder = $this->pujaOrderRepository->create($input);
+
+            if ($publicRoute) {
+                $publicSequence = PujaOrder::whereRaw('puja_request_id LIKE ?', ['PR-%'])->count() + 1;
+                $pujaOrder->forceFill([
+                    'puja_request_id' => 'PR-' . str_pad((string) $publicSequence, 4, '0', STR_PAD_LEFT),
+                ])->save();
+            }
 
             $totalAmount = 0;
 
-            // Store Cart Details
             foreach ($cartItems as $item) {
                 $pujaCost = $input['puja_location'] === 'temple'
                     ? $item['temple_amount']
@@ -155,44 +256,38 @@ class PujaOrderAPIController extends AppBaseController
                 PujaOrderList::create([
                     'puja_order_id' => $pujaOrder->id,
                     'puja_id' => $item['id'],
-                    'puja_cost' => $pujaCost
+                    'puja_cost' => $pujaCost,
                 ]);
 
                 $totalAmount += $pujaCost;
-            }   
+            }
 
-            // Update Total Amount in Puja Order
             $pujaOrder->update(['total_amount' => $totalAmount]);
 
-            // Create Order Status
             OrderStatus::create([
                 'puja_order_id' => $pujaOrder->id,
                 'status' => NEW_REQUEST,
             ]);
 
             $halls = PujaOrderList::where('puja_order_id', $pujaOrder->id)
-            ->join('pujas', 'puja_order_lists.puja_id', '=', 'pujas.id')
-            ->select('pujas.id', 'pujas.name', 'puja_order_lists.puja_cost')
-            ->get();
+                ->join('pujas', 'puja_order_lists.puja_id', '=', 'pujas.id')
+                ->select('pujas.id', 'pujas.name', 'puja_order_lists.puja_cost')
+                ->get();
 
-
-            // Send Emails
-            if (app()->environment('production')) {
-                Mail::to(applicationSettings('puja-request-email'))->send(new AdminPujaOrderMail($pujaOrder,$halls));
-                Mail::to($pujaOrder->user->email)->send(new UserPujaOrderMail($pujaOrder,$halls));
+            if ($sendEmails && app()->environment('production')) {
+                Mail::to(applicationSettings('puja-request-email'))->send(new AdminPujaOrderMail($pujaOrder, $halls));
+                Mail::to($pujaOrder->user->email)->send(new UserPujaOrderMail($pujaOrder, $halls));
             }
 
             DB::commit();
 
-            $data = [
+            return [
                 'puja_request_id' => $pujaOrder->puja_request_id,
             ];
-
-            return $this->sendResponse($data, 'Puja Order saved successfully');
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error($e);
-            return response()->json(['error' => 'Something went wrong' . $e], 500);
+            throw $e;
         }
     }
 

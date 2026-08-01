@@ -217,19 +217,6 @@ use Illuminate\Support\Facades\DB;
             $year = (int) $now->format('Y');
             $prefix = $now->format('Ymd') . 'P';
 
-            // Lock the latest order for this year to avoid race conditions
-            // $lastOrder = DB::table('puja_orders')
-            //     ->whereYear('created_at', $year)
-            //     ->orderByDesc('id')
-            //     ->lockForUpdate()
-            //     ->first();
-
-            // $nextSeq = 1;
-            // if ($lastOrder && isset($lastOrder->puja_request_id)) {
-            //     if (preg_match('/P(\d{4})$/', $lastOrder->puja_request_id, $m)) {
-            //         $nextSeq = ((int) $m[1]) + 1;
-            //     }
-            // }
             DB::table('puja_orders')
                 ->whereYear('created_at', $year)
                 ->orderByDesc('id')
@@ -259,6 +246,11 @@ use Illuminate\Support\Facades\DB;
     public function pujaOrderLists(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(\App\Models\PujaOrderList::class, 'puja_order_id');
+    }
+
+    public function paymentTransactions(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\App\Models\PaymentTransaction::class, 'puja_order_id');
     }
 
     public function getLatestStatus()

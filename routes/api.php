@@ -183,9 +183,12 @@ Route::get('event-categories', [App\Http\Controllers\API\EventCategoryAPIControl
 Route::get('events', [App\Http\Controllers\API\EventAPIController::class, 'index']);
 
 Route::get('pujas', [App\Http\Controllers\API\PujaAPIController::class, 'index']);
+Route::get('public/pujas', [App\Http\Controllers\API\PujaAPIController::class, 'publicIndex']);
 
 Route::post('templeTours', [App\Http\Controllers\API\TempleTourAPIController::class, 'store']);
 Route::post('pujaOrders', [App\Http\Controllers\API\PujaOrderAPIController::class, 'store']);
+Route::post('public/puja-orders', [App\Http\Controllers\API\PujaOrderAPIController::class, 'storePublic']);
+Route::post('public/puja-orders/paypal-success', [App\Http\Controllers\API\PujaOrderAPIController::class, 'paypalSuccess']);
 Route::post('check-puja-order', [App\Http\Controllers\API\PujaOrderAPIController::class, 'check']);
 Route::post('change-puja-order', [App\Http\Controllers\API\PujaOrderAPIController::class, 'change']);
 Route::post('cancel-puja-order', [App\Http\Controllers\API\PujaOrderAPIController::class, 'cancel']);
