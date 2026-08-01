@@ -1,0 +1,221 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
+
+
+
+body, p, li{font-family: 'Roboto', sans-serif; color:#000000; font-size: 14px;}
+.parsley-errors-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  
+  .parsley-errors-list li {
+    font-size: 10px;
+    color: $error;
+    padding: 3px 0 0 10px;
+  }
+  
+  .form-control.parsley-error {
+    border-color: $error !important;
+  }
+
+  .remove-gal-item {
+    position: absolute;
+    right: 0;
+  }
+  .remove-gal-item i {
+    color: $error;
+  }
+  .brand-link .brand-image{float:none; display:block}
+  .nav-sidebar .nav-link p{font-size: 13px; color:#555555}
+  .nav-sidebar > .nav-item .nav-icon.fa, .nav-sidebar > .nav-item .nav-icon.fas, .nav-sidebar > .nav-item .nav-icon.far, .nav-sidebar > .nav-item .nav-icon.fab, .nav-sidebar > .nav-item .nav-icon.fal, .nav-sidebar > .nav-item .nav-icon.fad, .nav-sidebar > .nav-item .nav-icon.svg-inline--fa, .nav-sidebar > .nav-item .nav-icon.ion {
+    font-size: 0.75rem; color:#555;
+}
+.btn-group .btn{display:inline-block; margin:0 10px}
+.table th, .table td{font-size: 13px; color: #555555;}
+
+.sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link.active, 
+.sidebar-light-primary .nav-sidebar > .nav-item > .nav-link.active{background-color:#c20202}
+.sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link.active p, 
+.sidebar-light-primary .nav-sidebar > .nav-item > .nav-link.active p,
+.sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link.active i, 
+.sidebar-light-primary .nav-sidebar > .nav-item > .nav-link.active i{color:#ffffff}
+.colorpicker{max-width:90%}
+.category-title{border-bottom:solid 1px #cccccc; padding-bottom:15px; margin-bottom: 15px;}
+textarea.form-control{max-height: 150px;}
+
+.customize-general-settings .form-group.col-sm-4.opening-hours-title-full, .opening-hours-title-full{flex: 0 0 100%;
+  max-width: 100%;}
+  .customize-general-settings .form-group.col-sm-4{flex: 0 0 50%;
+    max-width: 50%;}
+    .nav-sidebar .nav-link p{font-size: 12px;}
+
+    .page-tabs{margin: 20px ; padding: 0; border-bottom: solid 1px #cccccc; list-style: none;}
+    .page-tabs li{display: inline-block; width: auto; margin: 0; padding: 0;}
+    .page-tabs li a{display: block; background: #eee; font-size: 13px; line-height: 16px; padding: 15px 15px; margin: 0;}
+    .page-tabs li a .nav-icon{display: none !important;}
+    .page-tabs li a.active{background-color: #c20202;color: #ffffff !important;} 
+    .page-tabs li a.active p{color: #ffffff !important;}
+    .page-tabs li p{margin: 0; padding: 0;}
+
+.photo_galleries .card{display: inline-block; text-align: center; max-width: 180px; margin: 0 5px; vertical-align: top;}
+.photo_galleries .card img{width: 100%;}
+
+.admin-card .icon{width: 70px; height: 70px; background: green; border-radius: 100%; margin: 0 auto; text-align: center;  color: #ffffff; box-shadow: 0px 5px 20px #9e9b9b; margin-bottom: 30px;}
+.admin-card .icon .material-symbols-outlined{font-size: 40px; line-height: 70px;}
+.admin-card .profile-username{font-size: 30px;}
+.admin-card ul li {font-size: 18px; font-weight: 400;}
+.admin-card ul li  .material-symbols-outlined{display: inline-block; color: #000000; vertical-align: top; margin-right: 5px; position: relative; top: -3px;}
+.admin-card ul li a{font-size: 20px; color: #000; font-weight: bold;}
+.admin-card ul li:last-child{border-bottom: 0; padding-bottom: 0; border-bottom: none !important;}
+.admin-card ul li i{font-style: normal; font-size: 20px; display: inline-block; vertical-align: middle; font-weight: bold; color: #c20202;}
+.home-statistics ul li a {font-size: 20px; color: #000; padding-top: 15px; padding-bottom: 15px;}
+.home-statistics ul li a .badge{background:#c20202 !important ;}
+.home-statistics ul li a:hover,
+.admin-card ul li:hover .material-symbols-outlined{color: #c20202 !important;}
+.style-guide span{font-size: 14px !important; } 
+
+.style-guide .click-to-copy{cursor: pointer;}
+.color-primary{background: #FDB917; border-color: #FDB917;}
+.color-tertiary{background: #D56528; border-color: #D56528;}
+.color-link{background: #000000; border-color: #000000;}
+.color-font{background: #43121D; border-color: #43121D;}
+
+
+.navbar-light .navbar-nav .nav-link{color: #000000 !important;}
+.navbar-light .navbar-nav .nav-link:hover, .navbar-light .navbar-nav .nav-link.active{color: #c20202 !important;}
+
+.table th, .table td{max-width: 300px;}
+
+.puja-card .card-header {padding: 0; margin-bottom: 15px;}
+.puja-card  .card-body{padding: 0;}
+
+.custom-table-new table, .custom-table-new th, .custom-table-new td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+.custom-table-new th, .custom-table-new td {
+  padding: 15px;
+}
+
+.callout-success-bg{position: relative; padding: 30px;}
+.callout-success-bg::before{content: ""; position: absolute; left: 0; top: 0;
+  width: 0;
+      height: 0;
+      border-top: 50px solid #980406;
+      border-right: 50px solid transparent;}
+
+      .callout-success-bg::after{content: ""; position: absolute; right: 0; bottom: 0;
+        width: 0;
+        height: 0;
+        border-bottom: 50px solid #980406;
+        border-left: 50px solid transparent;}
+
+        .color-pallate{text-align: center; background: #eee; padding: 30px; margin-top: 30px;}
+        .color-pallate badge{width: 20px; height: 20px; display: inline-block; vertical-align: middle; margin: 0 10px; border-radius: 4px;}
+        .color-code-span{font-size: 20px; font-weight: bold;}
+        .new-request{background: #56b256; }
+        .reschedule-request{background: #027bff; }
+        .cancellation-request{background: #970506; }
+        .status-label {
+          display: inline-block; width: auto; font-size: 18px; padding: 10px 10px 10px 10px; color: #fff; position: relative;  margin: 0;
+      }
+        .color-pallate span{display: inline-block; vertical-align: middle; margin: 0 5px;}
+
+        .order-status ul{margin: 0; padding: 0; list-style: none;}
+        .order-status ul li{display: inline-block; width: auto; font-size: 18px; padding: 10px 10px 10px 35px; color: #fff; position: relative;  margin: 0;}
+        .order-status ul li:first-child{padding-left: 10px;}
+        .order-status ul li::before{content: "";
+          position: absolute;
+          right: -28px;
+          top: 0;
+          width: 0;
+          height: 0;
+          border-top: 24px solid transparent;
+          border-left: 30px solid #56b256;
+          border-bottom: 24px solid transparent;
+          z-index: 1;}
+
+          .order-status ul li:last-child:before{display: none;}
+
+          .order-status ul li.new-request::before{
+            border-left: 30px solid #56b256;
+           }
+           .order-status ul li.reschedule-request::before{
+            border-left: 30px solid #027bff;
+           }
+           .order-status ul li.cancellation-request::before{
+            border-left: 30px solid #970506;
+           }
+           .order-status ul li.new-request:nth-child(2n){background: #3c973c;}
+           .order-status ul li.reschedule-request:nth-child(2n){background: #005cbe;}
+           .order-status ul li.cancellation-request:nth-child(2n){background: #7c0a0a;}
+           .hall-addon-list{margin: 0 0 0 20px;  padding: 0; list-style: none;}
+
+    
+.request-new, .request-new td{
+    background-color: #ffefe0;
+}
+.request-reschedule, .request-reschedule td{
+    background-color: #ebfcff;
+}
+.request-cancel, .request-cancel td{
+    background-color: #fffde4;
+}
+.status-container {
+  float: right;
+}
+.status-item {
+  display: inline-block;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.color-box {
+  margin-left: 20px;
+  border: 1px solid #ccc;
+  padding: 0 10px;
+  margin-right: 5px;
+}
+.status-container > div:first-child > .color-box {
+  margin-left: 0;
+}
+
+.gallery-block { position: relative; margin-bottom: 20px; }
+.gallery-block img, .gallery-block .file-preview { 
+    width: 100%; 
+    height: 150px; 
+    object-fit: cover; 
+    border-radius: 5px;
+}
+.file-preview {
+    background: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 14px;
+    color: #666;
+}
+.copy-url {
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(0,0,0,0.7);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 3px;
+}
+.delete-btn {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+
+.date-icon input{
+  background: url("https://admin.htom.us/images/media/date_tkorvvfni.png") no-repeat center right 10px #fff;
+background-position: calc(96% + 10px) calc(100% - 10px);
+  
+  background-size: 18px 18px !important;}
+

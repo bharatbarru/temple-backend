@@ -1,0 +1,64 @@
+.decoration:not(.position-relative) {
+  position: absolute;
+}
+.decoration svg {
+  background: none !important;
+}
+.decoration.top {
+  top: 0;
+}
+.decoration.left {
+  left: 0;
+}
+.decoration.right {
+  right: 0;
+}
+.decoration.middle-y {
+  top: 50%;
+}
+.decoration.middle-x {
+  left: 50%;
+}
+.decoration.bottom {
+  bottom: 0;
+}
+.decoration.scale-2 svg {
+  transform: scale(2);
+}
+.decoration.scale-3 svg {
+  transform: scale(3);
+}
+.decoration.scale-4 svg {
+  transform: scale(4);
+}
+.decoration.scale-5 svg {
+  transform: scale(5);
+}
+
+.decoration-check {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.decoration-check .decoration {
+  position: relative;
+  max-width: 250px;
+}
+.decoration-check .icon {
+  position: absolute;
+  height: 4rem;
+}
+
+.mobile-screenshot {
+  position: relative;
+}
+.mobile-screenshot > img:first-child {
+  padding: 7%;
+}
+.mobile-screenshot > img:last-child {
+  top: 0;
+  left: 0;
+  position: absolute;
+  width: 100%;
+}/*# sourceMappingURL=decorations.css.map */

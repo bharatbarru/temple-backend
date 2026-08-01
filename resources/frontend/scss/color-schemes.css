@@ -1,0 +1,28 @@
+.btn-primary {
+  border-color: var(--primary-color);
+  background-color: var(--primary-color);
+}
+
+.btn-secondary {
+  color: #fff;
+  background-color: var(--secondary-color);
+  border-color: var(--secondary-color);
+}
+
+a {
+  color: var(--link-color);
+}
+
+body {
+  color: var(--font-color);
+}
+
+.primary-color {
+  color: var(--primary-color);
+}
+
+.btn-gradient {
+  border-color: var(--primary-color);
+  background: linear-gradient(90deg, #9BBD51 0%, rgba(22, 196, 187, 0.8) 156.36%);
+  color: #ffffff !important;
+}/*# sourceMappingURL=color-schemes.css.map */

@@ -1,0 +1,24 @@
+import './jquery.min';
+import './popper.min';
+import './bootstrap';
+
+import './aos';
+import './clipboard.min';
+import './jquery.fancybox.min';
+import './flatpickr.min';
+import './flickity.pkgd.min';
+import './ion.rangeSlider.min';
+import './isotope.pkgd.min';
+import './jarallax.min';
+import './jarallax-video.min';
+import './jarallax-element.min';
+import './jquery.countdown.min';
+import './jquery.smartWizard.min';
+import './plyr.polyfilled.min';
+import './prism';
+import './scrollMonitor';
+import './smooth-scroll.polyfills.min';
+import './svg-injector.umd.production';
+import './twitterFetcher_min';
+import './typed.min';
+import './theme';

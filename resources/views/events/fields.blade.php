@@ -1,0 +1,114 @@
+<!-- Event Category Id Field -->
+<div class="form-group col-sm-4">
+    {!! Form::label('event_category_id', 'Event Category:') !!}
+    {!! Form::select('event_category_id', $eventCategories, null, ['class' => 'form-control select2', 'required' , 'placeholder' => ' Select Event Category']) !!}
+</div>
+
+<!-- Title Field -->
+<div class="form-group col-sm-4">
+    {!! Form::label('title', 'Title:') !!}
+    {!! Form::text('title', null, ['class' => 'form-control', 'id' => 'title', 'required', 'maxlength' => 255, 'onkeyup' => 'convertToSlug()']) !!}
+</div>
+
+<!-- Slug Field -->
+<div class="form-group col-sm-4 disbaled_input">
+    {!! Form::label('slug', 'Slug:', ['class' => 'span_required']) !!}
+    {!! Form::text('slug', null, ['class' => 'form-control', 'required', 'id' => 'slug', 'readonly']) !!}
+</div>
+
+<!-- Image Field -->
+@include('common.image.single-image', ['field_label' => 'Image', 'field_name' => 'image', 'data' => isset($event) ? $event->image : null, 'path' => EVENT_IMAGE_PATH])
+
+<!-- Image Alt Text Field -->
+<div class="form-group col-sm-4">
+    {!! Form::label('image_alt_text', 'Image Alt Text:') !!}
+    {!! Form::text('image_alt_text', null, ['class' => 'form-control', 'maxlength' => 255]) !!}
+</div>
+
+<!-- Start Date Time Field -->
+<div class="form-group col-sm-4 date-icon">
+    {!! Form::label('start_date_time', 'Start Date & Time:') !!}
+    {!! Form::text('start_date_time', isset($event) ? formatDateTime($event->start_date_time) : null, ['class' => 'form-control datetimepicker','id'=>'start_date_time']) !!}
+</div>
+
+<!-- End Date Time Field -->
+<div class="form-group col-sm-4 date-icon">
+    {!! Form::label('end_date_time', 'End Date & Time:') !!}
+    {!! Form::text('end_date_time', isset($event) ? formatDateTime($event->end_date_time) : null, ['class' => 'form-control datetimepicker','id'=>'end_date_time']) !!}
+</div>
+
+<!-- Custom Url Field -->
+<div class="form-group col-sm-4">
+    {!! Form::label('custom_url', 'Custom Url:') !!}
+    {!! Form::text('custom_url', null, ['class' => 'form-control', 'maxlength' => 255]) !!}
+</div>
+
+<!-- Short Description Field -->
+<div class="form-group col-sm-12 col-lg-12">
+    {!! Form::label('short_description', 'Short Description:') !!}
+    {!! Form::textarea('short_description', null, ['class' => 'form-control', 'maxlength' => 65535]) !!}
+</div>
+
+<!-- Description Field -->
+<div class="form-group col-sm-12 col-lg-12">
+    {!! Form::label('description', 'Description:') !!}
+    @php
+        $defaultDescription = <<<HTML
+<div style="display: flex; align-items: center; justify-content: left; gap: 10px; margin: 50px 0;"><span style="color: red; font-weight: bold;">To Sponsor:</span><form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank"><input name="cmd" type="hidden" value="_s-xclick"> <input name="hosted_button_id" type="hidden" value="VJD5MSQ4Q6S3W"> <input title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" type="image"> <img src="https://www.paypal.com/en_US/i/scr/pixel.gif" alt="" width="1" height="1" border="0"></form></div>
+<p><strong>Select&nbsp;</strong>Temple Event Sponsorship<strong><br><img src="https://admin.htom.us/images/media/screenshot_cm7j9vtoa.png"><br></strong></p>
+<p>&nbsp;</p>
+HTML;
+    @endphp
+    {!! Form::textarea('description', old('description', isset($event) ? $event->description : $defaultDescription), ['class' => 'form-control', 'maxlength' => 65535]) !!}
+</div>
+
+<!-- Seo Title Field -->
+<div class="form-group col-sm-12 col-lg-12">
+    {!! Form::label('seo_title', 'Seo Title:') !!}
+    {!! Form::textarea('seo_title', null, ['class' => 'form-control', 'maxlength' => 65535]) !!}
+</div>
+
+<!-- Seo Keywords Field -->
+<div class="form-group col-sm-12 col-lg-12">
+    {!! Form::label('seo_keywords', 'Seo Keywords:') !!}
+    {!! Form::textarea('seo_keywords', null, ['class' => 'form-control', 'maxlength' => 65535]) !!}
+</div>
+
+<!-- Seo Description Field -->
+<div class="form-group col-sm-12 col-lg-12">
+    {!! Form::label('seo_description', 'Seo Description:') !!}
+    {!! Form::textarea('seo_description', null, ['class' => 'form-control', 'maxlength' => 65535]) !!}
+</div>
+
+@include('common.string-to-slug', ['fieldName' => 'title'])
+
+@include('common.editor', ['field' => 'short_description'])
+@include('common.editor', ['field' => 'description'])
+
+@push('page_scripts')
+    <script type="text/javascript">
+        // Override slug generator for Events: append a unique timestamp on create only
+        (function () {
+            // var isEdit = {!! isset($event) ? 'true' : 'false' !!};
+            var isEdit = {!! 'false' !!};
+            // Short per-page unique suffix (6 chars), stable while typing
+            var uniqueSuffix = (Date.now().toString(36) + Math.random().toString(36).slice(2,6)).slice(-6);
+
+            window.convertToSlug = function () {
+                var text = $("#title").val() || '';
+                var base = text.toLowerCase().trim()
+                    .replace(/\s+/g, '-')        // spaces to dashes
+                    .replace(/[^\w-]+/g, '')     // remove non-word chars
+                    .replace(/-+/g, '-')          // collapse multiple dashes
+                    .replace(/^-+|-+$/g, '');     // trim dashes
+
+                if (!isEdit) {
+                    // Only append unique suffix when creating a new event
+                    $("#slug").val(base ? base + '-' + uniqueSuffix : uniqueSuffix);
+                } else {
+                    $("#slug").val(base);
+                }
+            };
+        })();
+    </script>
+@endpush

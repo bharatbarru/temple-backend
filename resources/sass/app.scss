@@ -1,0 +1,23 @@
+// Variables
+@import "variables";
+
+// Bootstrap
+@import "~admin-lte/build/scss/adminlte";
+
+// Toastr
+@import "https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css";
+
+// Select2
+@import "https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css";
+
+// Colorpicker
+@import "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/3.4.0/css/bootstrap-colorpicker.min.css";
+
+// Datetimepicker
+@import "https://cdn.jsdelivr.net/npm/@eonasdan/tempus-dominus@6.9.11/dist/css/tempus-dominus.min.css";
+
+// Magnific Popup
+@import "https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.min.css";
+
+// Custom
+@import "custom";
