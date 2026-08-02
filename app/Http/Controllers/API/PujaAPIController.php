@@ -65,11 +65,12 @@ class PujaAPIController extends AppBaseController
 
     public function publicIndex(Request $request): JsonResponse
     {
-        $pujas = Puja::query()
-            ->where('publish', 1)
-            ->orderBy('sort')
-            ->orderBy('id')
-            ->get();
+       $pujas = Puja::query()
+        ->where('publish', 1)
+        ->where('temple_amount', '>', 0)
+        ->orderBy('sort')
+        ->orderBy('id')
+        ->get();
 
         return $this->sendResponse($pujas->toArray(), 'Published pujas retrieved successfully');
     }
