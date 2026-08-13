@@ -28,6 +28,11 @@ class PujaOrdersTable extends DataTableComponent
         $pujaOrder->destroy($id);
     }
 
+    public function getPaymentStatusValue($row): string
+    {
+        return $row && $row->paymentTransactions()->exists() ? 'Paid' : '';
+    }
+
     public function resetCounter()
     {
         $this->i = 1;
@@ -99,7 +104,13 @@ class PujaOrdersTable extends DataTableComponent
                     return $pujaOrder->user->email . '<br>' . $pujaOrder->user->mobile;
                 })
                 ->html(),
-                Column::make("Request Status", "id")
+            Column::make("Payment Status", "payment_status")
+                ->format(function ($value, $row) {
+                    return $this->getPaymentStatusValue($row);
+                })
+                ->sortable()
+                ->searchable(),
+            Column::make("Request Status", "id")
                 ->format(function($id){
                     $hallOrder = PujaOrder::find($id);
                     return $hallOrder->getLatestStatus();
