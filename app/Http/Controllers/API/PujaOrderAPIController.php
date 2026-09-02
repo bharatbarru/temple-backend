@@ -126,7 +126,10 @@ class PujaOrderAPIController extends AppBaseController
         $input = $request->all();
         $cartItems = $input['cart'] ?? [];
 
-        $data = $this->savePujaOrder($input, $cartItems, true, true);
+        // No mail here: the public booking is paid for right after it is created
+        // and `paypalSuccess()` sends the single confirmation mail that carries
+        // the transaction details.
+        $data = $this->savePujaOrder($input, $cartItems, false, true);
 
         return $this->sendResponse($data, 'Puja Order saved successfully');
     }
@@ -146,6 +149,11 @@ class PujaOrderAPIController extends AppBaseController
             'paypal_payer_id' => 'nullable|string',
             'paypal_create_time' => 'nullable|string',
             'paypal_update_time' => 'nullable|string',
+            'payment_method' => 'nullable|string',
+            'card_brand' => 'nullable|string',
+            'card_type' => 'nullable|string',
+            'card_last_digits' => 'nullable|string|max:8',
+            'card_holder_name' => 'nullable|string',
         ]);
 
         $pujaOrder = PujaOrder::where('puja_request_id', $request->puja_request_id)->first();
@@ -159,6 +167,18 @@ class PujaOrderAPIController extends AppBaseController
             return $this->sendError('Email does not match the registered user', 422);
         }
 
+        // The frontend can retry this call (page reload, double submit, PayPal
+        // returning twice). Reuse the transaction already recorded for the same
+        // PayPal payment so the booking is never charged - or mailed - twice.
+        $existingTransaction = $this->findExistingTransaction($pujaOrder, $request);
+
+        if ($existingTransaction) {
+            return $this->sendResponse(
+                $this->paymentResponsePayload($pujaOrder, $existingTransaction, $userEmail),
+                'Payment already recorded for this puja order'
+            );
+        }
+
         $paymentStatus = ($request->boolean('paypal_paid', false) || strtoupper((string) $request->input('paypal_status', '')) === 'COMPLETED')
             ? 'completed'
             : 'pending';
@@ -167,21 +187,35 @@ class PujaOrderAPIController extends AppBaseController
             'payment_status' => $paymentStatus,
         ]);
 
+        $rawResponse = $request->input('paypal_raw', []);
+        $paymentSource = PaymentTransaction::extractPaymentSource($rawResponse);
+
         $paymentTransaction = PaymentTransaction::create([
+            'transaction_type' => PaymentTransaction::TYPE_PUJA_ORDER,
             'frontend_user_id' => $pujaOrder->user_id,
             'puja_order_id' => $pujaOrder->id,
             'puja_request_id' => $pujaOrder->puja_request_id,
+            'reference_id' => $pujaOrder->puja_request_id,
             'paypal_order_id' => $request->input('paypal_order_id'),
             'paypal_capture_id' => $request->input('paypal_capture_id'),
             'paypal_status' => $request->input('paypal_status'),
             'paypal_paid' => $request->boolean('paypal_paid', false),
             'paypal_amount' => $request->input('paypal_amount'),
             'paypal_currency' => $request->input('paypal_currency'),
-            'paypal_payer_email' => $request->input('paypal_payer_email', $request->email),
-            'paypal_payer_id' => $request->input('paypal_payer_id'),
+            // Values sent explicitly by the frontend win over the ones parsed
+            // out of the raw PayPal response.
+            'paypal_payer_email' => $request->input('paypal_payer_email')
+                ?? $paymentSource['paypal_payer_email']
+                ?? $request->email,
+            'paypal_payer_id' => $request->input('paypal_payer_id') ?? $paymentSource['paypal_payer_id'],
+            'payment_method' => $request->input('payment_method') ?? $paymentSource['payment_method'],
+            'card_brand' => $request->input('card_brand') ?? $paymentSource['card_brand'],
+            'card_type' => $request->input('card_type') ?? $paymentSource['card_type'],
+            'card_last_digits' => $request->input('card_last_digits') ?? $paymentSource['card_last_digits'],
+            'card_holder_name' => $request->input('card_holder_name') ?? $paymentSource['card_holder_name'],
             'paypal_create_time' => $request->input('paypal_create_time'),
             'paypal_update_time' => $request->input('paypal_update_time'),
-            'paypal_raw' => $request->input('paypal_raw', []),
+            'paypal_raw' => $rawResponse,
         ]);
 
         $halls = PujaOrderList::where('puja_order_id', $pujaOrder->id)
@@ -189,29 +223,85 @@ class PujaOrderAPIController extends AppBaseController
             ->select('pujas.id', 'pujas.name', 'puja_order_lists.puja_cost')
             ->get();
 
+        $pujaOrder->load('paymentTransactions');
+
+        // One mail to the admin and one mail to the user - both carrying the
+        // transaction details of the payment recorded above.
         $adminEmail = applicationSettings('puja-request-email');
         if ($adminEmail) {
-            Mail::to($adminEmail)->send(new AdminPujaOrderMail($pujaOrder->load('paymentTransactions'), $halls));
+            $this->sendMailSafely($adminEmail, new AdminPujaOrderMail($pujaOrder, $halls));
         }
 
-        if ($userEmail && app()->environment('production')) {
-            Mail::to($userEmail)->send(new UserPujaOrderMail($pujaOrder->load('paymentTransactions'), $halls));
+        if ($userEmail) {
+            $this->sendMailSafely($userEmail, new UserPujaOrderMail($pujaOrder, $halls));
         }
 
-        return $this->sendResponse([
+        return $this->sendResponse(
+            $this->paymentResponsePayload($pujaOrder, $paymentTransaction, $userEmail),
+            'Payment completed successfully'
+        );
+    }
+
+    /**
+     * Locate the transaction already stored for the same PayPal payment.
+     */
+    private function findExistingTransaction(PujaOrder $pujaOrder, Request $request): ?PaymentTransaction
+    {
+        $captureId = $request->input('paypal_capture_id');
+        $orderId = $request->input('paypal_order_id');
+
+        if (!$captureId && !$orderId) {
+            return null;
+        }
+
+        return PaymentTransaction::where('puja_order_id', $pujaOrder->id)
+            ->where(function ($query) use ($captureId, $orderId) {
+                if ($captureId) {
+                    $query->orWhere('paypal_capture_id', $captureId);
+                }
+
+                if ($orderId) {
+                    $query->orWhere('paypal_order_id', $orderId);
+                }
+            })
+            ->first();
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function paymentResponsePayload(PujaOrder $pujaOrder, PaymentTransaction $transaction, ?string $userEmail): array
+    {
+        return [
             'puja_request_id' => $pujaOrder->puja_request_id,
             'email' => $userEmail,
-            'payment_status' => $paymentStatus,
-            'transaction_id' => $paymentTransaction->id,
-            'paypal_order_id' => $paymentTransaction->paypal_order_id,
-            'paypal_capture_id' => $paymentTransaction->paypal_capture_id,
-            'paypal_status' => $paymentTransaction->paypal_status,
-            'paypal_paid' => $paymentTransaction->paypal_paid,
-            'paypal_amount' => $paymentTransaction->paypal_amount,
-            'paypal_currency' => $paymentTransaction->paypal_currency,
-            'paypal_payer_email' => $paymentTransaction->paypal_payer_email,
-            'paypal_payer_id' => $paymentTransaction->paypal_payer_id,
-        ], 'Payment completed successfully');
+            'payment_status' => $pujaOrder->payment_status,
+            // Shared across puja bookings and donations.
+            'transaction_id' => $transaction->reference,
+            'transaction_type' => $transaction->transaction_type,
+            'paypal_order_id' => $transaction->paypal_order_id,
+            'paypal_capture_id' => $transaction->paypal_capture_id,
+            'paypal_status' => $transaction->paypal_status,
+            'paypal_paid' => $transaction->paypal_paid,
+            'paypal_amount' => $transaction->paypal_amount,
+            'paypal_currency' => $transaction->paypal_currency,
+            'paypal_payer_email' => $transaction->paypal_payer_email,
+            'paypal_payer_id' => $transaction->paypal_payer_id,
+            'payment_method' => $transaction->payment_method_label,
+            'payment_source' => $transaction->payment_source_label,
+        ];
+    }
+
+    /**
+     * A failing mail server must not fail an already captured payment.
+     */
+    private function sendMailSafely(string $to, $mailable): void
+    {
+        try {
+            Mail::to($to)->send($mailable);
+        } catch (\Throwable $e) {
+            Log::error('Failed to send puja order mail to ' . $to, ['exception' => $e]);
+        }
     }
 
     private function savePujaOrder(array $input, array $cartItems, bool $sendEmails = true, bool $publicRoute = false): array

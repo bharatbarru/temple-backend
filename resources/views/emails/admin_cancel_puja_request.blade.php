@@ -15,8 +15,7 @@
                     style="background-color: #ffffff; padding: 20px; border-radius: 8px; box-shadow: 0px 4px 8px rgba(0,0,0,0.1); border-top: solid 10px #980406;">
                     <!-- Header -->
                     <tr>
-                        <td align="center"><img style="line-height: 1px; margin: 0; padding: 0;" width="250px"
-                                height="104px" src="https://hindutemplenebraska.org/images/logo.png" /></td>
+                        <td align="center">@include('emails.partials.logo')</td>
                     </tr>
                     <tr>
                         <td style="text-align: center; padding: 20px;">
@@ -235,8 +234,7 @@
                     <!-- Footer -->
                     <tr>
                         <td style="text-align: center; padding: 20px; background-color: #980406;">
-                            <p style="font-family: Arial, sans-serif; font-size: 14px; color: #ffffff;">© 2025 Hindu
-                                Temple Omaha, NE, All rights reserved</p>
+                            <p style="font-family: Arial, sans-serif; font-size: 14px; color: #ffffff;">&copy; {{ date('Y') }} {{ emailCopyrightText() }}</p>
 
                         </td>
                     </tr>

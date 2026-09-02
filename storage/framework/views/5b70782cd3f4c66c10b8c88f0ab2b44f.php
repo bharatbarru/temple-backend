@@ -1,1 +1,0 @@
-<?php /**PATH C:\Users\DELL\Desktop\laravel-backup-20260801\laravel\vendor\rappasoft\laravel-livewire-tables\resources\views/stubs/custom.blade.php ENDPATH**/ ?>

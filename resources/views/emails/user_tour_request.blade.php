@@ -40,12 +40,7 @@
             <!-- Header -->
             <tr>
               <td align="center">
-                <img
-                  style="line-height: 1px; margin: 0; padding: 0"
-                  width="250px"
-                  height="104px"
-                  src="https://hindutemplenebraska.org/images/logo.png"
-                />
+                @include('emails.partials.logo')
               </td>
             </tr>
             <tr>
@@ -432,7 +427,7 @@
                     color: #ffffff;
                   "
                 >
-                  © {{ date('Y') }} Hindu Temple Omaha, NE, All rights reserved
+                  &copy; {{ date('Y') }} {{ emailCopyrightText() }}
                 </p>
               </td>
             </tr>

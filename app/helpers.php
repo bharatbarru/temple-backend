@@ -454,3 +454,79 @@ if (!function_exists("getClassNameFromStatus")) {
         }
     }
 }
+
+if (!function_exists("emailLogoPath")) {
+    /**
+     * Absolute filesystem path of the logo that can be embedded (CID) inside an email.
+     *
+     * Only raster formats are returned - SVG is not rendered by most mail clients.
+     *
+     * @return string|null
+     */
+    function emailLogoPath()
+    {
+        $candidates = [];
+
+        foreach (['logo', 'footer-logo'] as $slug) {
+            $fileName = applicationSettings($slug);
+            if (!empty($fileName)) {
+                $candidates[] = public_path(APPLICATION_SETTING_IMAGE_PATH . $fileName);
+            }
+        }
+
+        // Fallback to the logo shipped with the application.
+        $candidates[] = public_path(APPLICATION_SETTING_IMAGE_PATH . 'logo_d8rvrkt6n.png');
+
+        foreach ($candidates as $path) {
+            $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+
+            if (in_array($extension, ['png', 'jpg', 'jpeg', 'gif']) && is_file($path)) {
+                return $path;
+            }
+        }
+
+        return null;
+    }
+}
+
+if (!function_exists("emailLogoUrl")) {
+    /**
+     * Public URL of the logo, used when the logo cannot be embedded in the email.
+     *
+     * @return string
+     */
+    function emailLogoUrl()
+    {
+        $fileName = applicationSettings('logo');
+
+        if (!empty($fileName)) {
+            return asset(APPLICATION_SETTING_IMAGE_PATH . $fileName);
+        }
+
+        return asset(APPLICATION_SETTING_IMAGE_PATH . 'logo_d8rvrkt6n.png');
+    }
+}
+
+if (!function_exists("emailLogoAltText")) {
+    /**
+     * @return string
+     */
+    function emailLogoAltText()
+    {
+        $altText = applicationSettingsAltText('logo');
+
+        return !empty($altText) ? $altText : 'Hindu Temple Omaha, NE';
+    }
+}
+
+if (!function_exists("emailCopyrightText")) {
+    /**
+     * @return string
+     */
+    function emailCopyrightText()
+    {
+        $copyright = applicationSettings('copyright-text');
+
+        return !empty($copyright) ? $copyright : 'Hindu Temple Omaha, NE, All rights reserved.';
+    }
+}
