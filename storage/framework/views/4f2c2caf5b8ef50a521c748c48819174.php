@@ -1,1 +1,0 @@
-<th><?php echo $fieldTitle; ?></th><?php /**PATH C:\Users\PSHCPU008\Desktop\temple-backend\vendor\infyomlabs\adminlte-templates\views\templates\scaffold\table\blade\header.blade.php ENDPATH**/ ?>

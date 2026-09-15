@@ -1,1 +1,0 @@
-<td>{{ $<?php echo $modelVariable; ?>-><?php echo $fieldName; ?> }}</td><?php /**PATH C:\Users\PSHCPU008\Desktop\temple-backend\vendor\infyomlabs\adminlte-templates\views\templates\scaffold\table\blade\cell.blade.php ENDPATH**/ ?>

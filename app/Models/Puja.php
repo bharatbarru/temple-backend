@@ -64,7 +64,8 @@ use Illuminate\Database\Eloquent\Model;
         'home_amount',
         'temple_amount',
         'sort',
-        'publish'
+        'publish',
+        'mobile_toggle'
     ];
 
     protected $casts = [

@@ -61,6 +61,10 @@ class PujasTable extends DataTableComponent
                 ->format(function ($publish, $puja) {
                     return view('common.livewire-tables.publish', ['publish' => $publish, 'id' => $puja->id]);
                 }),
+            Column::make("Mobile Toggle", "mobile_toggle")
+                ->format(function ($mobile_toggle, $puja) {
+                    return view('common.livewire-tables.mobile-toggle', ['mobile_toggle' => $mobile_toggle, 'id' => $puja->id]);
+                }),
             Column::make("Actions", 'id')
                 ->format(
                     fn($value, $row, Column $column) => view('common.livewire-tables.actions', [
@@ -87,5 +91,12 @@ class PujasTable extends DataTableComponent
             $puja->sort = $item['order'];
             $puja->save();
         }
+    }
+    
+    public function toggleMobileToggle($id)
+    {
+        $puja = Puja::find($id);
+        $puja->mobile_toggle = !$puja->mobile_toggle;
+        $puja->save();
     }
 }
