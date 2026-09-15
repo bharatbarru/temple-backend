@@ -419,6 +419,15 @@ class RolesAndPermissionsSeeder extends Seeder
             Permission::create(['name' => 'publish-activity-log']);
         }
 
+        if (Permission::where('name', 'reports')->first() == null) {
+            Permission::create(['name' => 'reports', 'type' => 1]);
+            Permission::create(['name' => 'add-reports']);
+            Permission::create(['name' => 'edit-reports']);
+            Permission::create(['name' => 'delete-reports']);
+            Permission::create(['name' => 'view-reports']);
+            Permission::create(['name' => 'publish-reports']);
+        }
+
         // create roles and assign created permissions
         if (Role::where('name', 'Developer Admin')->first() == null) {
             $role = Role::create(['name' => 'Developer Admin']);
@@ -426,6 +435,13 @@ class RolesAndPermissionsSeeder extends Seeder
         } else {
             $role = Role::where('name', 'Developer Admin')->first();
             $role->givePermissionTo(Permission::all());
+        }
+
+        // The temple's own admin already manages every booking, so it gets the
+        // reports that summarise them.
+        $superAdmin = Role::where('name', 'super admin')->first();
+        if ($superAdmin != null) {
+            $superAdmin->givePermissionTo(Permission::whereIn('name', ['reports', 'view-reports'])->get());
         }
     }
 }

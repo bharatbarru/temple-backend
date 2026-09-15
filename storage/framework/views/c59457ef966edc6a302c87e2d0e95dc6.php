@@ -24,15 +24,15 @@
                 <?php
 if (! isset($_instance)) {
     $html = \Livewire\Livewire::mount('pujas-table', [])->html();
-} elseif ($_instance->childHasBeenRendered('RQQQdb5')) {
-    $componentId = $_instance->getRenderedChildComponentId('RQQQdb5');
-    $componentTag = $_instance->getRenderedChildComponentTagName('RQQQdb5');
+} elseif ($_instance->childHasBeenRendered('6uTSTHJ')) {
+    $componentId = $_instance->getRenderedChildComponentId('6uTSTHJ');
+    $componentTag = $_instance->getRenderedChildComponentTagName('6uTSTHJ');
     $html = \Livewire\Livewire::dummyMount($componentId, $componentTag);
-    $_instance->preserveRenderedChild('RQQQdb5');
+    $_instance->preserveRenderedChild('6uTSTHJ');
 } else {
     $response = \Livewire\Livewire::mount('pujas-table', []);
     $html = $response->html();
-    $_instance->logRenderedChild('RQQQdb5', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
+    $_instance->logRenderedChild('6uTSTHJ', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
 }
 echo $html;
 ?>

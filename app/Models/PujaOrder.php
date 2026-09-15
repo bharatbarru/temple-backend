@@ -145,12 +145,23 @@ use Illuminate\Support\Facades\DB;
  * )
  */class PujaOrder extends Model
 {
-    use HasFactory;    public $table = 'puja_orders';
+    use HasFactory;
+
+    /**
+     * Where the booking was made - the website, the mobile app, or `unknown`
+     * for bookings taken before the source was recorded.
+     */
+    public const SOURCE_WEB = 'web';
+    public const SOURCE_MOBILE = 'mobile';
+    public const SOURCE_UNKNOWN = 'unknown';
+
+    public $table = 'puja_orders';
 
     public $fillable = [
         'puja_request_id',
         'user_id',
         'puja_location',
+        'source',
         'date_of_puja',
         'time_of_puja',
         'alternate_date_of_puja1',
@@ -170,6 +181,7 @@ use Illuminate\Support\Facades\DB;
     protected $casts = [
         'puja_request_id' => 'string',
         'puja_location' => 'string',
+        'source' => 'string',
         'date_of_puja' => 'date',
         'time_of_puja' => 'string',
         'alternate_date_of_puja1' => 'date',
@@ -190,6 +202,7 @@ use Illuminate\Support\Facades\DB;
         'puja_request_id' => 'nullable|string|max:255|unique:puja_orders,puja_request_id,',
         'user_id' => 'nullable',
         'puja_location' => 'nullable|string|max:255',
+        'source' => 'nullable|string|max:20',
         'date_of_puja' => 'required',
         'time_of_puja' => 'required|string|max:255',
         'alternate_date_of_puja1' => 'nullable',
@@ -251,6 +264,18 @@ use Illuminate\Support\Facades\DB;
     public function paymentTransactions(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(\App\Models\PaymentTransaction::class, 'puja_order_id');
+    }
+
+    /**
+     * "Web" / "Mobile" / "Unknown" - readable form of the booking source.
+     */
+    public function getSourceLabelAttribute(): string
+    {
+        return match ($this->source) {
+            self::SOURCE_WEB => 'Web',
+            self::SOURCE_MOBILE => 'Mobile',
+            default => 'Unknown',
+        };
     }
 
     public function getLatestStatus()

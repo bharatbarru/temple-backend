@@ -423,6 +423,16 @@
 @endif
 
 
+<!-- Reports -->
+@can('view-reports')
+    <li class="nav-item">
+        <a href="{{ route('reports.index') }}" class="nav-link {{ Request::is('admin/reports*') ? 'active' : '' }}">
+            <i class="nav-icon fas fa-file-excel"></i>
+            <p>Reports</p>
+        </a>
+    </li>
+@endcan
+
 <!-- Online Orders -->
 {{-- @if (auth()->user()->canAny(['view-payment-methods', 'view-customers', 'view-coupons', 'view-orders']))
     <li class="nav-item">

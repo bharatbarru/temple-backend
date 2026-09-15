@@ -326,6 +326,9 @@ class PujaOrderAPIController extends AppBaseController
 
             $input['user_id'] = $user->id;
             $input['puja_location'] = $input['location'];
+            // `storePublic()` is the website's endpoint, `store()` the mobile
+            // app's, so the route the booking came in on is the source.
+            $input['source'] = $publicRoute ? PujaOrder::SOURCE_WEB : PujaOrder::SOURCE_MOBILE;
 
             $pujaOrder = $this->pujaOrderRepository->create($input);
 

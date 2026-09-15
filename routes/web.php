@@ -152,6 +152,10 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     /* Temple Tour Manager */
     Route::resource('templeTours', App\Http\Controllers\TempleTourController::class);
 
+    /* Reports */
+    Route::get('reports', [App\Http\Controllers\ReportController::class, 'index'])->name('reports.index');
+    Route::get('reports/export', [App\Http\Controllers\ReportController::class, 'export'])->name('reports.export');
+
     /**
      * Old Data Management
      */

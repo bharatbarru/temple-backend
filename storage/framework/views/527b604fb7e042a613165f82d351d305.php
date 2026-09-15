@@ -270,6 +270,16 @@
 <?php endif; ?>
 
 
+<!-- Reports -->
+<?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('view-reports')): ?>
+    <li class="nav-item">
+        <a href="<?php echo e(route('reports.index')); ?>" class="nav-link <?php echo e(Request::is('admin/reports*') ? 'active' : ''); ?>">
+            <i class="nav-icon fas fa-file-excel"></i>
+            <p>Reports</p>
+        </a>
+    </li>
+<?php endif; ?>
+
 <!-- Online Orders -->
 
 
