@@ -226,8 +226,10 @@ class PujaOrderAPIController extends AppBaseController
         $pujaOrder->load('paymentTransactions');
 
         // One mail to the admin and one mail to the user - both carrying the
-        // transaction details of the payment recorded above.
-        $adminEmail = applicationSettings('puja-request-email');
+        // transaction details of the payment recorded above. The communications
+        // mailbox is the admin recipient for website bookings; the older puja-request
+        // address only stands in when it is not configured.
+        $adminEmail = applicationSettings('mobile-primary-email') ?: applicationSettings('puja-request-email');
         if ($adminEmail) {
             $this->sendMailSafely($adminEmail, new AdminPujaOrderMail($pujaOrder, $halls));
         }

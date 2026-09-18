@@ -222,6 +222,15 @@ class ApplicationSettingSeeder extends Seeder
                 'application_setting_type_id' => $type4->id
             ]);
         }
+         if (ApplicationSetting::where('slug', 'mobile-primary-email')->first() == null) {
+            ApplicationSetting::create([
+                'field_name' => 'Mobile Primary Email',
+                'slug' => 'mobile-primary-email',
+                'input_type' => 'textbox',
+                'value' => 'communications@htom.us',
+                'application_setting_type_id' => $type4->id
+            ]);
+        }
         if (ApplicationSetting::where('slug', 'secondary-email')->first() == null) {
             ApplicationSetting::create([
                 'field_name' => 'Secondary Email',

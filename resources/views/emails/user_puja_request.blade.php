@@ -144,26 +144,6 @@
                                        
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td
-                                        style="font-family: Arial, sans-serif; font-size: 13px; line-height: 17px; color: #333333; padding: 5px; border-bottom: 1px solid #eeeeee;">
-                                       Alternate Date:</td>
-                                    <td
-                                        style="font-family: Arial, sans-serif; font-size: 13px; line-height: 17px; color: #333333; padding: 5px; border-bottom: 1px solid #eeeeee;">
-                                        {{formatDate($pujaOrder->alternate_date_of_puja1) }}
-                                      
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td
-                                        style="font-family: Arial, sans-serif; font-size: 13px; line-height: 17px; color: #333333; padding: 5px; border-bottom: 1px solid #eeeeee;">
-                                        Alternate Time:</td>
-                                    <td
-                                        style="font-family: Arial, sans-serif; font-size: 13px; line-height: 17px; color: #333333; padding: 5px; border-bottom: 1px solid #eeeeee;">
-                                        {{ $pujaOrder->alternate_time_of_puja2 }}
-                                       
-                                    </td>
-                                </tr>
 
 
                             </table>
@@ -215,10 +195,10 @@
 
                             <p
                             style="font-family: Arial, sans-serif; font-size: 14px; color: #666666; line-height: 1.5; margin-top: 20px; text-align: center;">
-                            If you have any questions, feel free to reply to this <a href="mailto:{!! applicationSettings('secondary-email') !!}"
+                            For any queries, please contact us at <a href="mailto:{!! applicationSettings('mobile-primary-email') !!}"
                             style="text-decoration: none; color: #980406; font-weight:bold;">
-                            {!! applicationSettings('secondary-email') !!}</a>, and our team will get back
-                            to you as soon as possible. 
+                            {!! applicationSettings('mobile-primary-email') !!}</a>, and our team will get back
+                            to you as soon as possible.
                         </p>
                         </td>
                     </tr>
